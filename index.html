@@ -6,48 +6,20 @@
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <style>
       body { margin: 0; overflow: hidden; }
-      #ui { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; color: white; font-family: sans-serif; text-shadow: 0 0 5px black; pointer-events: none; }
     </style>
   </head>
 
   <body>
-    <div id="ui">Muffi Lafée AR: Наведи на маркер</div>
-
-    <div id="attribution">
-        "cute fairy doll" by <a href="https://sketchfab.com/nevtaan" target="_blank">nevtaan</a> / <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY</a>
-    </div>
-
     <a-scene 
-      mindar-image="imageTargetSrc: ./targets.mind; warmupTolerance: 1; missTolerance: 10; filterMinCF: 0.001; filterBeta: 0.01;" 
+      mindar-image="imageTargetSrc: ./targets.mind; warmupTolerance: 1; missTolerance: 5;" 
       color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" 
       vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       
-      <a-assets>
-        <a-asset-item id="fairyModel" src="./fairy_model.glb"></a-asset-item>
-      </a-assets>
-
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-entity position="0 0 0" rotation="0 0 0">
-          <a-gltf-model 
-            src="#fairyModel" 
-            position="0 0 0" 
-            scale="0.005 0.005 0.005" 
-            rotation="0 0 0"
-            /* Мы убираем анимацию вообще, чтобы понять — она скачет сама или из-за кода */
-          >
-          </a-gltf-model>
-        </a-entity>
+        <a-sphere radius="0.1" color="pink" position="0 0 0"></a-sphere>
       </a-entity>
     </a-scene>
-
-    <script>
-      // Прячем надпись сразу при нахождении
-      const ui = document.querySelector('#ui');
-      document.querySelector('a-scene').addEventListener('targetFound', () => {
-        ui.style.display = 'none';
-      });
-    </script>
   </body>
 </html>
