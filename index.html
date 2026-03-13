@@ -4,30 +4,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-    
     <style>
       body { margin: 0; overflow: hidden; }
-      /* Этот экран покажется только ОДИН раз в самом начале */
       #start-screen {
         display: flex; flex-direction: column; align-items: center; justify-content: center;
-        position: absolute; left: 0; right: 0; top: 0; bottom: 0;
-        background: rgba(255, 245, 245, 0.95); /* Нежно-розовый под Muffi Lafée */
-        color: #8d6e63; z-index: 99; font-family: 'Segoe UI', sans-serif; text-align: center;
+        position: absolute; inset: 0; background: #fff5f5; z-index: 99; font-family: sans-serif;
       }
-      #start-screen button {
-        padding: 15px 30px; font-size: 18px; cursor: pointer;
-        background: #e1bee7; border: none; border-radius: 25px; color: #4a148c;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      }
-      #start-screen.hidden { display: none; }
+      #start-button { padding: 20px 40px; font-size: 20px; background: #e1bee7; border-radius: 30px; border: none; cursor: pointer; }
+      .hidden { display: none !important; }
     </style>
   </head>
-
   <body>
     <div id="start-screen">
-      <h2>Muffi Lafée Magic</h2>
-      <p>Нажми на кнопку и направь камеру на логотип</p>
-      <button id="start-button">Запустить магию</button>
+      <button id="start-button">ЗАПУСТИТЬ МАГИЮ ✨</button>
     </div>
 
     <div id="attribution">
@@ -35,42 +24,33 @@
     </div>
 
     <a-scene 
-      mindar-image="imageTargetSrc: ./targets.mind; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 5; missTolerance: 30;" 
-      color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" 
-      vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      mindar-image="imageTargetSrc: ./targets.mind; filterMinCF: 0.00001; filterBeta: 0.1; missTolerance: 1000; warmupTolerance: 1;" 
+      color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       
       <a-assets>
         <a-asset-item id="fairyModel" src="./fairy_model.glb"></a-asset-item>
       </a-assets>
 
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+      <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;"></a-camera>
 
       <a-entity mindar-image-target="targetIndex: 0">
         <a-gltf-model 
-          id="fairy-entity"
           src="#fairyModel" 
-          rotation="0 0 0" 
           position="0 0 0.2" 
-          scale="0.5 0.5 0.5"
-          animation="property: position; to: 0 0.15 0.2; dur: 2500; easing: easeInOutQuad; dir: alternate; loop: true"
-        >
+          scale="1 1 1" 
+          rotation="0 0 0"
+          animation="property: position; to: 0 0.1 0.2; dur: 2000; easing: easeInOutQuad; dir: alternate; loop: true">
         </a-gltf-model>
       </a-entity>
     </a-scene>
 
     <script>
-      const startButton = document.querySelector('#start-button');
-      const startScreen = document.querySelector('#start-screen');
-      
-      // Запуск сцены только после клика
-      startButton.addEventListener('click', () => {
-        startScreen.classList.add('hidden');
-      });
-
-      // Дополнительная проверка: если модель загрузилась, но «смотрит» не туда
-      const fairy = document.querySelector('#fairy-entity');
-      fairy.addEventListener('model-loaded', () => {
-        console.log("Фея прилетела и готова к работе!");
+      const btn = document.querySelector('#start-button');
+      const screen = document.querySelector('#start-screen');
+      btn.addEventListener('click', () => {
+        screen.classList.add('hidden');
+        // Принудительный старт видео (иногда помогает на iPhone)
+        document.querySelector('video').play();
       });
     </script>
   </body>
